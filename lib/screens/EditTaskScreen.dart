@@ -4,10 +4,7 @@ import '../data/services/TaskService.dart';
 import '../widgets/CustomTextFormField.dart';
 
 class EditTaskScreen extends StatefulWidget {
-  EditTaskScreen({
-    super.key,
-    required this.task,
-  });
+  const EditTaskScreen({super.key, required this.task});
   final Task task;
   @override
   State<EditTaskScreen> createState() => _EditTaskScreenState();
@@ -31,11 +28,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: Text(
-        "Modifier une tache",
-      )),
-      // backgroundColor: Colors.transparent,
+      appBar: AppBar(title: const Text("Modifier une tache")),
       body: Center(
         child: Container(
           decoration: BoxDecoration(
@@ -69,7 +62,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                 width: MediaQuery.of(context).size.width * 0.5,
                 margin: const EdgeInsets.only(bottom: 10),
                 // height: 100,
-                padding: EdgeInsets.symmetric(vertical: 10),
+                padding: const EdgeInsets.symmetric(vertical: 10),
                 child: ElevatedButton(
                   // style: defaultStyle(context),
                   onPressed: () {
@@ -87,7 +80,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                   },
                   child: Text(
                     addOrEdit ? "Creer" : "Modifier  ",
-                    style: TextStyle(fontSize: 20),
+                    style: const TextStyle(fontSize: 20),
                   ),
                 ),
               ),

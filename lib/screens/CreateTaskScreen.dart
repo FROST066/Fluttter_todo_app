@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:blog/screens/home_page.dart';
+import 'package:blog/widgets/customFlutterToast.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -29,16 +31,19 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     });
     try {
       Task? task = await TaskService.create(json.encode(formData));
-      if (task != null) Navigator.pop(context);
+      customFlutterToast(msg: "Tache créée avec succès");
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (builder) => HomePage(selectedIndex: 1)),
+          (route) => false);
       print("Created Task---------$task");
     } on DioError catch (e) {
       print(e);
       Map<String, dynamic>? error = e.response?.data;
       if (error != null && error.containsKey('message')) {
-        Fluttertoast.showToast(msg: error['message']);
+        customFlutterToast(msg: error['message']);
       } else {
-        Fluttertoast.showToast(
-            msg: "Une erreur est survenue veuillez rééssayer");
+        customFlutterToast(msg: "Une erreur est survenue veuillez rééssayer");
       }
     } finally {
       isLoading = false;
@@ -154,7 +159,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                 child: ElevatedButton(
                   style: defaultStyle(context),
                   onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
+                    if (!isLoading && _formKey.currentState!.validate()) {
                       final formData = {
                         "title": titleController.text,
                         "description": descriptionController.text,

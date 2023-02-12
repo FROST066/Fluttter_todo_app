@@ -8,11 +8,11 @@ class TaskService {
   static Future<Task?> create(data) async {
     final prefs = await SharedPreferences.getInstance();
     final String token = prefs.getString(Constant.TOKEN_PREF_KEY) ?? '';
-    print("create task post data $data");
+    print("create task data-----------------$data\n");
     var response = await Dio().post('${Constant.BASE_URL}todos',
         data: data,
         options: Options(headers: {"authorization": "Bearer $token"}));
-    print("create task response data-------------${response.data}");
+    // print("create task response data-------------${response.data}\n");
     return Task.fromJson(response.data);
   }
 

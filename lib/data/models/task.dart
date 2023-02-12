@@ -19,20 +19,20 @@ class Task {
   String title;
   String description;
   String priority;
-  DateTime deadlineAt;
+  String deadlineAt;
 
   factory Task.fromJson(Map<String, dynamic> json) => Task(
         title: json["title"],
         description: json["description"],
         priority: json["priority"],
-        deadlineAt: DateTime.parse(json["deadline_at"]),
+        deadlineAt: json["deadline_at"],
       );
 
   Map<String, dynamic> toJson() => {
         "title": title,
         "description": description,
         "priority": priority,
-        "deadline_at": deadlineAt.toIso8601String(),
+        "deadline_at": deadlineAt,
       };
 
   @override
@@ -44,7 +44,7 @@ class Task {
     String? title,
     String? description,
     String? priority,
-    DateTime? deadlineAt,
+    String? deadlineAt,
   }) {
     return Task(
       title: title ?? this.title,

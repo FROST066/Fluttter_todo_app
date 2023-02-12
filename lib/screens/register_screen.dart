@@ -1,5 +1,7 @@
 import 'package:blog/data/services/users_service.dart';
 import 'package:blog/screens/login_screen.dart';
+import 'package:blog/utils/styles.dart';
+import 'package:blog/widgets/customFlutterToast.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -35,14 +37,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       Fluttertoast.showToast(msg: "Utilisateur créé avec succès");
     } on DioError catch (e) {
-      Map<String, dynamic> error = e.response?.data;
-      if (error != null && error.containsKey('message')) {
-        Fluttertoast.showToast(msg: error['message']);
-      } else {
-        Fluttertoast.showToast(
-            msg: "Une erreur est survenue veuillez rééssayer");
-      }
       print(e.response);
+      Map<String, dynamic>? error = e.response?.data;
+      if (error != null && error.containsKey('message')) {
+        customFlutterToast(msg: error['message']);
+      } else {
+        customFlutterToast(msg: "Une erreur est survenue veuillez rééssayer");
+      }
     } finally {
       setState(() {
         isLoading = false;
@@ -121,6 +122,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     const SizedBox(height: 20.0),
                     ElevatedButton(
+                        style: customStyle(context),
                         onPressed: () async {
                           if (!isLoading && formKey.currentState!.validate()) {
                             await _register(

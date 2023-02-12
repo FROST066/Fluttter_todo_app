@@ -3,6 +3,7 @@ import 'package:blog/data/services/users_service.dart';
 import 'package:blog/screens/list_tasks_screen.dart';
 import 'package:blog/screens/register_screen.dart';
 import 'package:blog/utils/constants.dart';
+import 'package:blog/utils/styles.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -118,6 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 20.0),
                     ElevatedButton(
+                        style: customStyle(context),
                         onPressed: () async {
                           if (!isLoading && formKey.currentState!.validate()) {
                             await _login(
@@ -144,8 +146,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       MaterialPageRoute(
                           builder: (context) => const RegisterScreen()));
                 },
-                child: const Text("Pas de Compte ? Créer un compte",
-                    style: TextStyle(fontSize: 17, color: Colors.blue)),
+                child: const Text(
+                  "Pas de Compte ? Créer un compte",
+                  // style: TextStyle(fontSize: 17, color: Colors.blue)
+                ),
               ),
             )
           ],

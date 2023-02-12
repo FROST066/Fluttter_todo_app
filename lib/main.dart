@@ -28,10 +28,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        textTheme: TextTheme(bodyText2: GoogleFonts.lato())
-      ),
-      home: firstPage == 'LOGIN' ? const LoginScreen() : const HomePage(),
+          // brightness: Brightness.dark,
+          primarySwatch: Colors.blue,
+          textTheme: TextTheme(bodyText2: GoogleFonts.workSans())),
+      home: firstPage == 'LOGIN' ? const LoginScreen() : HomePage(),
     );
   }
 }

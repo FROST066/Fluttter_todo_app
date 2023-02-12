@@ -26,7 +26,7 @@ class _ListTasksScreenState extends State<ListTasksScreen> {
     });
     try {
       tasks = await TaskService.fetch();
-      print("--all task got-----$tasks");
+      print("All task got--------------$tasks");
     } on DioError catch (e) {
       print(e);
       Map<String, dynamic>? error = e.response?.data;

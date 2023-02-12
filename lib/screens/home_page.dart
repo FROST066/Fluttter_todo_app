@@ -4,8 +4,8 @@ import 'package:pie_chart/pie_chart.dart';
 import 'list_tasks_screen.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
+  HomePage({super.key, this.selectedIndex});
+  int? selectedIndex;
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -16,7 +16,13 @@ class _HomePageState extends State<HomePage> {
     const ListTasksScreen(),
     const Pie_Chart()
   ];
-  int selectedIndex = 0;
+  late int selectedIndex;
+  @override
+  void initState() {
+    selectedIndex = widget.selectedIndex ?? 0;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
