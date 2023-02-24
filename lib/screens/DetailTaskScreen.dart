@@ -49,25 +49,21 @@ class _DetailTaskScreenState extends State<DetailTaskScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Details of todo'),
-        ),
+        appBar: AppBar(title: const Text('Details de le tache')),
         body: Container(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              Text(
+              const Text(
                 'TODO TITLE',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
-              SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Container(
-                    padding: EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       boxShadow: isactiveR
                           ? [
@@ -75,8 +71,8 @@ class _DetailTaskScreenState extends State<DetailTaskScreen> {
                                 color: Colors.grey.withOpacity(0.5),
                                 spreadRadius: 3,
                                 blurRadius: 5,
-                                offset:
-                                    Offset(0, 2), // changes position of shadow
+                                offset: const Offset(
+                                    0, 2), // changes position of shadow
                               )
                             ]
                           : null,
@@ -85,18 +81,18 @@ class _DetailTaskScreenState extends State<DetailTaskScreen> {
                           ? Colors.red
                           : Colors.grey.withOpacity(0.4),
                     ),
-                    child: Text(
+                    height: 25,
+                    width: 50,
+                    child: const Text(
                       'HIGH',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,
                       ),
                     ),
-                    height: 25,
-                    width: 50,
                   ),
                   Container(
-                    padding: EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       boxShadow: isactiveY
                           ? [
@@ -104,8 +100,8 @@ class _DetailTaskScreenState extends State<DetailTaskScreen> {
                                 color: Colors.grey.withOpacity(0.5),
                                 spreadRadius: 3,
                                 blurRadius: 5,
-                                offset:
-                                    Offset(0, 2), // changes position of shadow
+                                offset: const Offset(
+                                    0, 2), // changes position of shadow
                               )
                             ]
                           : null,
@@ -114,18 +110,18 @@ class _DetailTaskScreenState extends State<DetailTaskScreen> {
                           ? Colors.orange
                           : Colors.grey.withOpacity(0.4),
                     ),
-                    child: Text(
+                    height: 25,
+                    width: 70,
+                    child: const Text(
                       'MEDIUM',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.white,
                       ),
                     ),
-                    height: 25,
-                    width: 70,
                   ),
                   Container(
-                    padding: EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       boxShadow: isactiveG
                           ? [
@@ -133,8 +129,8 @@ class _DetailTaskScreenState extends State<DetailTaskScreen> {
                                 color: Colors.grey.withOpacity(0.5),
                                 spreadRadius: 3,
                                 blurRadius: 5,
-                                offset:
-                                    Offset(0, 2), // changes position of shadow
+                                offset: const Offset(
+                                    0, 2), // changes position of shadow
                               )
                             ]
                           : null,
@@ -143,23 +139,19 @@ class _DetailTaskScreenState extends State<DetailTaskScreen> {
                           ? Colors.green
                           : Colors.grey.withOpacity(0.4),
                     ),
-                    child: Text(
-                      'LOW',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
                     height: 25,
                     width: 50,
+                    child: const Text(
+                      'LOW',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
-              SizedBox(
-                height: 30,
-              ),
+              const SizedBox(height: 30),
               Container(
-                padding: EdgeInsets.only(left: 20),
+                padding: const EdgeInsets.only(left: 20),
                 height: 50,
                 decoration: BoxDecoration(
                   color: Colors.grey.withOpacity(0.2),
@@ -169,7 +161,7 @@ class _DetailTaskScreenState extends State<DetailTaskScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Row(
-                      children: [
+                      children: const [
                         Text(
                           'Description: ',
                           style: TextStyle(color: Colors.blue),
@@ -181,7 +173,7 @@ class _DetailTaskScreenState extends State<DetailTaskScreen> {
                       ],
                     ),
                     Row(
-                      children: [
+                      children: const [
                         Text(
                           'Date de création: ',
                           style: TextStyle(color: Colors.blue),

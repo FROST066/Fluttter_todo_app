@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:blog/screens/home_page.dart';
 import 'package:blog/utils/constants.dart';
+import 'package:blog/widgets/CustomLoader.dart';
 import 'package:blog/widgets/customFlutterToast.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:dio/dio.dart';
@@ -165,14 +166,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     }
                   },
                   child: isLoading
-                      ? const Center(
-                          child: SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                              )),
-                        )
+                      ? customLoader(color: Colors.white)
                       : const Text("Ajouter  ", style: TextStyle(fontSize: 20)),
                 ),
               ),

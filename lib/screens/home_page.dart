@@ -1,6 +1,7 @@
 import 'package:blog/utils/constants.dart';
 import 'package:blog/widgets/BarChart.dart';
 import 'package:flutter/material.dart';
+import 'AboutUs.dart';
 import 'list_tasks_screen.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,7 +26,7 @@ class _HomePageState extends State<HomePage> {
     _list = [
       CustomChart(dataMap: dataMap),
       const ListTasksScreen(),
-      CustomChart(dataMap: dataMap),
+      const AboutUs(),
     ];
     selectedIndex = widget.selectedIndex ?? 0;
     super.initState();

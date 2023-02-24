@@ -54,9 +54,9 @@ class MyApp extends StatelessWidget {
               borderSide: const BorderSide(color: appBlue, width: 2)),
         ),
         textTheme: TextTheme(
-          button: const TextStyle(fontSize: 20, color: Colors.black),
+          button: GoogleFonts.workSans(fontSize: 20, color: Colors.black),
           // headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-          bodyText2: GoogleFonts.workSans(color: Colors.black),
+          bodyText2: GoogleFonts.lora(color: Colors.black),
         ),
       ),
       home: firstPage == 'LOGIN' ? const LoginScreen() : HomePage(),

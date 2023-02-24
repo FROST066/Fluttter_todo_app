@@ -54,7 +54,7 @@ class TaskService {
     final prefs = await SharedPreferences.getInstance();
     final String token = prefs.getString(Constant.TOKEN_PREF_KEY) ?? '';
 
-    var response = await Dio().delete('${Constant.BASE_URL}posts/$id',
+    var response = await Dio().delete('${Constant.BASE_URL}todos/$id',
         options: Options(headers: {"authorization": "Bearer $token"}));
 
     return Task.fromJson(response.data);

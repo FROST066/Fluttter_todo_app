@@ -10,47 +10,54 @@ String taskToJson(Task data) => json.encode(data.toJson());
 
 class Task {
   Task({
-    required this.title,
+    required this.id,
     required this.description,
-    required this.priority,
+    required this.title,
+    this.beginedAt,
+    this.finishedAt,
     required this.deadlineAt,
+    required this.priority,
+    required this.userId,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
-  String title;
+  String id, createdAt, updatedAt, deadlineAt;
   String description;
+  String title;
+  String? beginedAt;
+  String? finishedAt;
   String priority;
-  String deadlineAt;
+  String userId;
 
   factory Task.fromJson(Map<String, dynamic> json) => Task(
-        title: json["title"],
+        id: json["id"],
         description: json["description"],
-        priority: json["priority"],
+        title: json["title"],
+        beginedAt: json["begined_at"],
+        finishedAt: json["finished_at"],
         deadlineAt: json["deadline_at"],
+        priority: json["priority"],
+        userId: json["user_id"],
+        createdAt: json["created_at"],
+        updatedAt: json["updated_at"],
       );
 
   Map<String, dynamic> toJson() => {
-        "title": title,
+        "id": id,
         "description": description,
-        "priority": priority,
+        "title": title,
+        "begined_at": beginedAt,
+        "finished_at": finishedAt,
         "deadline_at": deadlineAt,
+        "priority": priority,
+        "user_id": userId,
+        "created_at": createdAt,
+        "updated_at": updatedAt,
       };
 
   @override
   String toString() {
-    return 'Task{title: $title, description: $description, priority: $priority, deadlineAt: $deadlineAt}';
-  }
-
-  Task copyWith({
-    String? title,
-    String? description,
-    String? priority,
-    String? deadlineAt,
-  }) {
-    return Task(
-      title: title ?? this.title,
-      description: description ?? this.description,
-      priority: priority ?? this.priority,
-      deadlineAt: deadlineAt ?? this.deadlineAt,
-    );
+    return 'Task{id: $id, description: $description, title: $title, beginedAt: $beginedAt, finishedAt: $finishedAt, deadlineAt: $deadlineAt, priority: $priority, userId: $userId, createdAt: $createdAt, updatedAt: $updatedAt}';
   }
 }
