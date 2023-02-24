@@ -1,4 +1,5 @@
 import 'package:blog/screens/home_page.dart';
+import 'package:blog/widgets/BarChart.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:blog/screens/login_screen.dart';
 import 'package:blog/utils/constants.dart';
@@ -22,15 +23,42 @@ class MyApp extends StatelessWidget {
 
   final String firstPage;
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          // brightness: Brightness.dark,
-          primarySwatch: Colors.blue,
-          textTheme: TextTheme(bodyText2: GoogleFonts.workSans())),
+      theme: ThemeData.light().copyWith(
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+            backgroundColor: appBlue, foregroundColor: Colors.white),
+        appBarTheme: AppBarTheme(
+            backgroundColor: Colors.white,
+            elevation: 0,
+            foregroundColor: Colors.black,
+            centerTitle: true,
+            titleTextStyle: GoogleFonts.lora(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.bold)),
+        primaryColor: appBlue,
+        inputDecorationTheme: InputDecorationTheme(
+          hintStyle: const TextStyle(color: appBlue, fontSize: 18),
+          floatingLabelStyle: const TextStyle(fontSize: 18, color: appBlue),
+          prefixIconColor: appBlue,
+          suffixIconColor: appBlue,
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: const BorderSide(color: appBlue, width: 2)),
+          labelStyle: GoogleFonts.workSans(color: appBlue, fontSize: 18),
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: const BorderSide(color: appBlue, width: 2)),
+        ),
+        textTheme: TextTheme(
+          button: const TextStyle(fontSize: 20, color: Colors.black),
+          // headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+          bodyText2: GoogleFonts.workSans(color: Colors.black),
+        ),
+      ),
       home: firstPage == 'LOGIN' ? const LoginScreen() : HomePage(),
     );
   }

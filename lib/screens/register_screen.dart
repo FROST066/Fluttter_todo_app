@@ -1,5 +1,6 @@
 import 'package:blog/data/services/users_service.dart';
 import 'package:blog/screens/login_screen.dart';
+import 'package:blog/utils/constants.dart';
 import 'package:blog/utils/styles.dart';
 import 'package:blog/widgets/customFlutterToast.dart';
 import 'package:dio/dio.dart';
@@ -34,8 +35,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       emailController.text = "";
       usernameController.text = "";
       passwordController.text = "";
-
-      Fluttertoast.showToast(msg: "Utilisateur créé avec succès");
+      customFlutterToast(msg: "Utilisateur créé avec succès");
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
     } on DioError catch (e) {
       print(e.response);
       Map<String, dynamic>? error = e.response?.data;
@@ -60,49 +62,50 @@ class _RegisterScreenState extends State<RegisterScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             const Text("Inscription",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
-                    color: Colors.blue)),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
             Form(
                 key: formKey,
                 child: Column(
                   children: [
                     TextFormField(
+                      style: const TextStyle(color: Colors.black),
                       controller: usernameController,
                       keyboardType: TextInputType.text,
                       decoration: const InputDecoration(
-                          hintText: "Entrez votre pseudo",
+                          // hintText: "Entrez votre pseudo",
                           labelText: "Pseudo",
-                          icon: Icon(Icons.person)),
+                          prefixIcon: Icon(Icons.person)),
                       validator: (value) {
                         return value == null || value == ""
                             ? "Ce champs est obligatoire"
                             : null;
                       },
                     ),
+                    const SizedBox(height: 15.0),
                     TextFormField(
+                      style: const TextStyle(color: Colors.black),
                       controller: emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
-                          hintText: "Entrez votre e-mail",
+                          // hintText: "Entrez votre e-mail",
                           labelText: "E-mail",
-                          icon: Icon(Icons.alternate_email)),
+                          prefixIcon: Icon(Icons.alternate_email)),
                       validator: (value) {
                         return value == null || value == ""
                             ? "Ce champs est obligatoire"
                             : null;
                       },
                     ),
-                    const SizedBox(height: 10.0),
+                    const SizedBox(height: 15.0),
                     TextFormField(
+                      style: const TextStyle(color: Colors.black),
                       controller: passwordController,
                       keyboardType: TextInputType.text,
                       obscureText: !_passwordVisible,
                       decoration: InputDecoration(
-                        hintText: "Entrez votre mot de passe",
+                        // hintText: "Entrez votre mot de passe",
                         labelText: "Mot de passe",
-                        icon: const Icon(Icons.lock),
+                        prefixIcon: const Icon(Icons.lock),
                         suffixIcon: IconButton(
                           onPressed: () {
                             setState(() {
@@ -143,21 +146,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             : const Text("S'inscrire"))
                   ],
                 )),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginScreen()));
-                },
-                child: const Text(
-                  "Vous avez un compte ? Connectez vous",
-                  style: TextStyle(fontSize: 17, color: Colors.blue),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("Vous avez un compte ?",
+                    style: TextStyle(fontSize: 15)),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LoginScreen()));
+                  },
+                  child: const Text(" Connectez vous",
+                      style: TextStyle(fontSize: 17, color: appBlue)),
                 ),
-              ),
-            )
+              ],
+            ),
           ],
         ),
       ),

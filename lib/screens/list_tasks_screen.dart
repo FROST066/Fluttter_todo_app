@@ -105,10 +105,8 @@ class _ListTasksScreenState extends State<ListTasksScreen> {
                   ),
                 ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => CreateTaskScreen()));
-        },
+        onPressed: () => Navigator.push(context,
+            MaterialPageRoute(builder: (context) => CreateTaskScreen())),
         tooltip: 'Creer une tache',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.

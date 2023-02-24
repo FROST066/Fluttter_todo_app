@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomTextFormField extends StatelessWidget {
   CustomTextFormField({
@@ -10,6 +11,8 @@ class CustomTextFormField extends StatelessWidget {
     this.textInputType,
     this.autofocus,
     this.maxLines,
+    this.textAlign,
+    this.onChanged,
   });
   TextEditingController? controller;
   String hintText;
@@ -17,12 +20,16 @@ class CustomTextFormField extends StatelessWidget {
   TextInputType? textInputType;
   bool? obscureText, autofocus;
   int? maxLines;
+  TextAlign? textAlign;
   String? Function(String?)? validatorFun;
+  void Function(String)? onChanged;
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 12, top: 5),
       child: TextFormField(
+        textAlign: textAlign ?? TextAlign.start,
+        onChanged: onChanged ?? (value) {},
         autofocus: autofocus ?? false,
         maxLines: maxLines ?? 1,
         style: const TextStyle(color: Colors.black),
@@ -31,15 +38,8 @@ class CustomTextFormField extends StatelessWidget {
         decoration: InputDecoration(
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-            hintText: hintText,
-            hintStyle: TextStyle(color: Colors.black.withOpacity(0.6)),
-            prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-                borderSide: BorderSide.none),
-            filled: true,
-            // fillColor: appGrey,
-            iconColor: Colors.black),
+            labelText: hintText,
+            prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null),
         validator: validatorFun ??
             (value) {
               if (value == null || value == "") {
@@ -57,11 +57,11 @@ class CustomPasswordFormField extends StatefulWidget {
     super.key,
     this.controller,
     this.validatorFun,
-    required this.hintText,
+    required this.labelText,
     this.autofocus,
   });
   TextEditingController? controller;
-  String hintText;
+  String labelText;
   bool? autofocus;
   String? Function(String?)? validatorFun;
 
@@ -78,27 +78,19 @@ class _CustomPasswordFormFieldState extends State<CustomPasswordFormField> {
       padding: const EdgeInsets.only(bottom: 12),
       child: TextFormField(
         autofocus: widget.autofocus ?? false,
-        // maxLines: widget.maxLines ?? 1,
         obscureText: obscureText,
-        style: const TextStyle(color: Colors.black),
         controller: widget.controller,
+        style: GoogleFonts.workSans(color: Colors.black),
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.symmetric(vertical: 1),
-            hintText: widget.hintText,
-            hintStyle: TextStyle(color: Colors.black.withOpacity(0.6)),
+            labelText: widget.labelText,
             prefixIcon: const Icon(Icons.lock_outline),
             suffixIcon: GestureDetector(
                 onTap: () => setState(() {
                       obscureText = !obscureText;
                     }),
                 child: Icon(
-                    obscureText ? Icons.visibility_off : Icons.visibility)),
-            border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-                borderSide: BorderSide.none),
-            filled: true,
-            // fillColor: appGrey,
-            iconColor: Colors.black),
+                    obscureText ? Icons.visibility_off : Icons.visibility))),
         validator: widget.validatorFun ??
             (value) {
               if (value == null || value == "") {

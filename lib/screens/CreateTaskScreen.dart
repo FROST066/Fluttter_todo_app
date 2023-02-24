@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:blog/screens/home_page.dart';
+import 'package:blog/utils/constants.dart';
 import 'package:blog/widgets/customFlutterToast.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:dio/dio.dart';
@@ -58,12 +59,9 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
         title: const Text("Ajouter une tache"),
         centerTitle: true,
       ),
-      // backgroundColor: Colors.transparent,
       body: Center(
         child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-          ),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
           // height: 300,
           width: MediaQuery.of(context).size.width * 0.9,
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
@@ -84,50 +82,50 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         controller: descriptionController,
                         hintText: "Description",
                         prefixIcon: Icons.description),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * .75,
-                      child: DropdownButtonFormField(
-                        decoration: const InputDecoration(
-                          icon: Icon(Icons.transgender),
-                          labelText: "Priorite",
-                          contentPadding: EdgeInsets.only(right: 40),
-                        ),
-                        value: priority,
-                        items: const [
-                          DropdownMenuItem(value: "high", child: Text("High")),
-                          DropdownMenuItem(
-                              value: "medium", child: Text("Medium")),
-                          DropdownMenuItem(value: "low", child: Text("Low"))
-                        ],
-                        onChanged: (value) {
-                          setState(() {
-                            priority = value;
-                          });
-                          // print(priority);
-                        },
-                        validator: (e) {
-                          return (e == null)
-                              ? "Ce champ est obligatoire"
-                              : null;
-                        },
+                    DropdownButtonFormField(
+                      style: const TextStyle(color: Colors.black),
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.transgender),
+                        labelText: "Priorite",
+                        contentPadding: EdgeInsets.only(right: 40),
                       ),
+                      // value: priority,
+                      items: const [
+                        DropdownMenuItem(value: "high", child: Text("High")),
+                        DropdownMenuItem(
+                            value: "medium", child: Text("Medium")),
+                        DropdownMenuItem(value: "low", child: Text("Low"))
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          priority = value;
+                        });
+                        // print(priority);
+                      },
+                      validator: (e) {
+                        return (e == null) ? "Ce champ est obligatoire" : null;
+                      },
                     ),
                     Container(
                       margin: const EdgeInsets.only(top: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Flexible(
+                          const Flexible(
                               flex: 3,
                               child: Text(
-                                "   Deadline",
-                                style: TextStyle(
-                                    fontSize: 17,
-                                    color: Colors.black.withOpacity(.5)),
+                                "  Deadline",
+                                style: TextStyle(fontSize: 17, color: appBlue),
                               )),
                           Expanded(
                             flex: 6,
                             child: DateTimePicker(
+                              dateLabelText: "Date",
+                              timeLabelText: "Heure",
+                              textAlign: TextAlign.center,
+                              timeFieldWidth: 70,
+                              style: const TextStyle(
+                                  fontSize: 17, color: Colors.black),
                               type: DateTimePickerType.dateTimeSeparate,
                               initialValue:
                                   DateTime.now().toString().substring(0, 19),
@@ -136,8 +134,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               lastDate: DateTime(2024, 1, 1),
                               calendarTitle: "Selectionnez une date ",
                               cancelText: "Annuler",
-                              decoration: const InputDecoration(
-                                  border: InputBorder.none),
                               onChanged: (val) {
                                 setState(() {
                                   deadline_at = "$val:00";
@@ -154,7 +150,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
               Container(
                 width: MediaQuery.of(context).size.width * 0.5,
                 margin: const EdgeInsets.only(bottom: 10),
-                // height: 100,
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 child: ElevatedButton(
                   style: defaultStyle(context),
@@ -178,10 +173,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 color: Colors.white,
                               )),
                         )
-                      : const Text(
-                          "Ajouter  ",
-                          style: TextStyle(fontSize: 20),
-                        ),
+                      : const Text("Ajouter  ", style: TextStyle(fontSize: 20)),
                 ),
               ),
             ],

@@ -1,5 +1,6 @@
 import 'package:blog/data/models/AuthenticatedUser.dart';
 import 'package:blog/data/services/users_service.dart';
+import 'package:blog/screens/home_page.dart';
 import 'package:blog/screens/list_tasks_screen.dart';
 import 'package:blog/screens/register_screen.dart';
 import 'package:blog/utils/constants.dart';
@@ -8,6 +9,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../widgets/customFlutterToast.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -41,17 +44,17 @@ class _LoginScreenState extends State<LoginScreen> {
       prefs.setString(Constant.TOKEN_PREF_KEY, authenticatedUser.accessToken!);
       emailController.text = "";
       passwordController.text = "";
-      Fluttertoast.showToast(msg: "Connexion effectuée avec succès");
-
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => ListTasksScreen()));
+      customFlutterToast(msg: "Connexion effectuée avec succès");
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+          (route) => false);
     } on DioError catch (e) {
-      Map<String, dynamic> error = e.response?.data;
+      Map<String, dynamic>? error = e.response?.data;
       if (error != null && error.containsKey('message')) {
         Fluttertoast.showToast(msg: error['message']);
       } else {
-        Fluttertoast.showToast(
-            msg: "Une erreur est survenue veuillez rééssayer");
+        customFlutterToast(msg: "Une erreur est survenue veuillez rééssayer");
       }
       print(e.response);
     } finally {
@@ -70,36 +73,35 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             const Text("Connexion",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
-                    color: Colors.blue)),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
             Form(
                 key: formKey,
                 child: Column(
                   children: [
                     TextFormField(
+                      style: const TextStyle(color: Colors.black),
                       controller: emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
-                          hintText: "Entrez votre e-mail",
+                          // hintText: "Entrez votre e-mail",
                           labelText: "E-mail",
-                          icon: Icon(Icons.alternate_email)),
+                          prefixIcon: Icon(Icons.alternate_email)),
                       validator: (value) {
                         return value == null || value == ""
                             ? "Ce champs est obligatoire"
                             : null;
                       },
                     ),
-                    const SizedBox(height: 10.0),
+                    const SizedBox(height: 15.0),
                     TextFormField(
+                      style: const TextStyle(color: Colors.black),
                       controller: passwordController,
                       keyboardType: TextInputType.text,
                       obscureText: !_passwordVisible,
                       decoration: InputDecoration(
-                        hintText: "Entrez votre mot de passe",
+                        // hintText: "Entrez votre mot de passe",
                         labelText: "Mot de passe",
-                        icon: const Icon(Icons.lock),
+                        prefixIcon: const Icon(Icons.lock),
                         suffixIcon: IconButton(
                           onPressed: () {
                             setState(() {
@@ -137,20 +139,22 @@ class _LoginScreenState extends State<LoginScreen> {
                             : const Text("Se connecter"))
                   ],
                 )),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const RegisterScreen()));
-                },
-                child: const Text(
-                  "Pas de Compte ? Créer un compte",
-                  // style: TextStyle(fontSize: 17, color: Colors.blue)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("Vous n'avez pas de compte ? ",
+                    style: TextStyle(fontSize: 15)),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const RegisterScreen()));
+                  },
+                  child: const Text("Créer un compte",
+                      style: TextStyle(fontSize: 17, color: appBlue)),
                 ),
-              ),
+              ],
             )
           ],
         ),
