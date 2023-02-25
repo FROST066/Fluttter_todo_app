@@ -90,7 +90,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     DropdownButtonFormField(
                       style: const TextStyle(color: Colors.black),
                       decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.transgender),
+                        prefixIcon: Icon(Icons.bar_chart_outlined),
                         labelText: "Priorite",
                         contentPadding: EdgeInsets.only(right: 40),
                       ),

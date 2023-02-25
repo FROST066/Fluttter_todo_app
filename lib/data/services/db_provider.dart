@@ -11,18 +11,6 @@ const String COLUMN_DESCRIPTION = 'description';
 
 class TodoProvider {
   Database? db;
-  // Future open(String path) async {
-  //   db = await openDatabase(path, version: 1,
-  //       onCreate: (Database db, int version) async {
-  //     await db.execute('''
-  //       create table $TABLE_NAME (
-  //       $COLUMN_ID integer primary key autoincrement,
-  //       $COLUMN_TITLE varchar(255) not null,
-  //       $COLUMN_DESCRIPTION varchar(255) not null)
-  //     ''');
-  //   });
-  // }
-
   Future open(String path) async {
     db = await openDatabase(join(await getDatabasesPath(), path), version: 1,
         onCreate: (Database db, int version) async {

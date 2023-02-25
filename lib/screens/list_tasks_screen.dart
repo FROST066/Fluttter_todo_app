@@ -36,7 +36,7 @@ class _ListTasksScreenState extends State<ListTasksScreen> {
     });
     try {
       Task? task = await TaskService.patch(id, json.encode(formData));
-      customFlutterToast(msg: "Tache modifiée avec succès");
+      // customFlutterToast(msg: "Tache modifiée avec succès");
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (builder) => HomePage(selectedIndex: 1)),
@@ -91,7 +91,7 @@ class _ListTasksScreenState extends State<ListTasksScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Liste des tasks"),
+        title: const Text("Liste des tâches"),
         actions: [
           IconButton(
               onPressed: () async {

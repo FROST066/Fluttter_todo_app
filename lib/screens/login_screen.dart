@@ -143,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text("Vous n'avez pas de compte ? ",
-                    style: TextStyle(fontSize: 15)),
+                    style: TextStyle(fontSize: 14)),
                 TextButton(
                   onPressed: () {
                     Navigator.push(
@@ -152,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             builder: (context) => const RegisterScreen()));
                   },
                   child: const Text("Créer un compte",
-                      style: TextStyle(fontSize: 17, color: appBlue)),
+                      style: TextStyle(fontSize: 16, color: appBlue)),
                 ),
               ],
             )

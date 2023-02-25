@@ -33,7 +33,13 @@ class CustomChart extends StatefulWidget {
 class _CustomChartState extends State<CustomChart> {
   bool isLoadingTasks = false;
   List<Task> tasks = [];
-  Map<String, int> dataMap = {};
+  Map<String, int> dataMap = {
+    "Toutes les tâches": 0,
+    "Tâches non commencées": 0,
+    "Tâches en cours": 0,
+    "Tâches finies": 0,
+    "Tâches finies avec retard": 0
+  };
 
   Map<String, int> dataMapDead = {
     "Toutes les tâches": 200,
@@ -118,11 +124,13 @@ class _CustomChartState extends State<CustomChart> {
                               const SizedBox(height: 10),
                               Row(
                                 children: [
-                                  CustomAnimatedContainer(
-                                      width: totalWidth *
-                                          e.value.toDouble() /
-                                          dataMap["Toutes les tâches"]!,
-                                      color: colorsMap[e.key]!),
+                                  dataMap["Toutes les tâches"]! != 0
+                                      ? CustomAnimatedContainer(
+                                          width: totalWidth *
+                                              e.value.toDouble() /
+                                              dataMap["Toutes les tâches"]!,
+                                          color: colorsMap[e.key]!)
+                                      : const SizedBox(),
                                   Text(
                                     e.value.toString(),
                                     style: TextStyle(color: colorsMap[e.key]!),
