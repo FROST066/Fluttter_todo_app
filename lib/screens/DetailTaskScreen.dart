@@ -1,5 +1,8 @@
 import 'package:blog/data/models/task.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import '../utils/constants.dart';
 
 class DetailTaskScreen extends StatefulWidget {
   const DetailTaskScreen({super.key, required this.task});
@@ -8,187 +11,116 @@ class DetailTaskScreen extends StatefulWidget {
   State<DetailTaskScreen> createState() => _DetailTaskScreenState();
 }
 
-enum level { Medium, Low, High }
-
 class _DetailTaskScreenState extends State<DetailTaskScreen> {
-  level value = level.Low;
-  bool isactiveR = false;
-  bool isactiveY = false;
-  bool isactiveG = true;
-
-  bool isRed(level level_value) {
-    if (level_value == level.High) {
-      isactiveR = true;
-      return true;
-    } else {
-      isactiveR = false;
-      return false;
-    }
-  }
-
-  bool isYellow(level level_value) {
-    if (level_value == level.Medium) {
-      isactiveY = true;
-      return true;
-    } else {
-      isactiveY = false;
-      return false;
-    }
-  }
-
-  bool isGreen(level level_value) {
-    if (level_value == level.Low) {
-      isactiveG = true;
-      return true;
-    } else {
-      isactiveG = false;
-      return false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('Details de le tache')),
-        body: Container(
-          padding: const EdgeInsets.all(20),
+        // appBar: AppBar(title: const Text('Details de le tache')),
+        body: Center(
+      child: SingleChildScrollView(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * .9,
           child: Column(
             children: [
-              const Text(
-                'TODO TITLE',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 40)
+                    .copyWith(bottom: 10),
+                child: Text(
+                  widget.task.title,
+                  style: GoogleFonts.lora(
+                      fontWeight: FontWeight.bold, fontSize: 30),
+                ),
+              ),
+              Text(
+                widget.task.description,
+                style:
+                    GoogleFonts.lora(fontWeight: FontWeight.w400, fontSize: 20),
               ),
               const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+              GridView(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 1,
+                    childAspectRatio: 3,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10),
+                padding: const EdgeInsets.all(10),
+                shrinkWrap: true,
+                // itemCount: filteredProductsList.length,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      boxShadow: isactiveR
-                          ? [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 3,
-                                blurRadius: 5,
-                                offset: const Offset(
-                                    0, 2), // changes position of shadow
-                              )
-                            ]
-                          : null,
-                      borderRadius: BorderRadius.circular(5),
-                      color: isRed(value)
-                          ? Colors.red
-                          : Colors.grey.withOpacity(0.4),
-                    ),
-                    height: 25,
-                    width: 50,
-                    child: const Text(
-                      'HIGH',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      boxShadow: isactiveY
-                          ? [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 3,
-                                blurRadius: 5,
-                                offset: const Offset(
-                                    0, 2), // changes position of shadow
-                              )
-                            ]
-                          : null,
-                      borderRadius: BorderRadius.circular(5),
-                      color: isYellow(value)
-                          ? Colors.orange
-                          : Colors.grey.withOpacity(0.4),
-                    ),
-                    height: 25,
-                    width: 70,
-                    child: const Text(
-                      'MEDIUM',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      boxShadow: isactiveG
-                          ? [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 3,
-                                blurRadius: 5,
-                                offset: const Offset(
-                                    0, 2), // changes position of shadow
-                              )
-                            ]
-                          : null,
-                      borderRadius: BorderRadius.circular(5),
-                      color: isGreen(value)
-                          ? Colors.green
-                          : Colors.grey.withOpacity(0.4),
-                    ),
-                    height: 25,
-                    width: 50,
-                    child: const Text(
-                      'LOW',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
+                  Item(Icons.priority_high_rounded, "Priorite",
+                      widget.task.priority, Colors.deepOrangeAccent),
+                  Item(Icons.add, "Création", widget.task.createdAt, appBlue),
+                  Item(Icons.close_sharp, "Deadline", widget.task.deadlineAt,
+                      Colors.purple),
+                  widget.task.beginedAt != null
+                      ? Item(Icons.play_circle, "Démarrage",
+                          widget.task.beginedAt!, Colors.green)
+                      : const SizedBox(),
+                  widget.task.finishedAt != null
+                      ? Item(Icons.stop, "Arrêt", widget.task.finishedAt!,
+                          Colors.red)
+                      : const SizedBox(),
                 ],
               ),
-              const SizedBox(height: 30),
-              Container(
-                padding: const EdgeInsets.only(left: 20),
-                height: 50,
-                decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Row(
-                      children: const [
-                        Text(
-                          'Description: ',
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                        Text(
-                          'lorem ipsum dolor la vie est belle',
-                          overflow: TextOverflow.ellipsis,
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: const [
-                        Text(
-                          'Date de création: ',
-                          style: TextStyle(color: Colors.blue),
-                        ),
-                        Text(
-                          '22-08-205 à 18h:25',
-                          overflow: TextOverflow.ellipsis,
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              )
             ],
           ),
-        ));
+        ),
+      ),
+    ));
   }
+}
+
+Widget Item(IconData icon, String title, String date, Color color) {
+  date = date.replaceAll(" ", " à ").replaceAll(":", " : ");
+  date = date.replaceFirst(date[0], date[0].toUpperCase());
+
+  return Container(
+    height: 100,
+    padding: const EdgeInsets.all(10),
+    decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.grey.withOpacity(.2),
+              blurRadius: 10,
+              spreadRadius: 5)
+        ]),
+    child: Row(
+      children: [
+        Flexible(
+          flex: 3,
+          child: Container(
+            // margin: EdgeInsets.only(right: 10),
+            decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+            height: 300,
+            width: 200,
+            child: Icon(icon, color: Colors.white, size: 50),
+          ),
+        ),
+        Flexible(
+          flex: 5,
+          child: Center(
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                Text(
+                  title,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  date,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      height: 1.75, fontWeight: FontWeight.w400, fontSize: 15),
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }

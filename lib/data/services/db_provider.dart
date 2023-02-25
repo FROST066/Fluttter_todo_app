@@ -1,64 +1,60 @@
+import 'package:blog/data/models/task.dart';
 import 'package:sqflite/sqflite.dart';
+import 'dart:async';
+import 'package:path/path.dart';
 
-const String tableTodo = 'Todos';
-const String columnId = 'id';
-const String columnTitle = 'title';
-const String columnDescription = 'description';
-
-class Todo {
-  // attributs
-  late int id;
-  late String title;
-  late String description;
-  // constructeur
-  Todo();
-  // transformer en map
-  Map<String, Object?> toMap() {
-    var map = <String, Object?>{
-      columnTitle: title,
-      columnDescription: description,
-    };
-    if (id != null) {
-      map[columnId] = id;
-    }
-    return map;
-  }
-
-  Todo.fromMap(Map<dynamic, dynamic> map) {
-    title = map[columnTitle]!;
-    description = map[columnDescription]!;
-    id = map[columnId]!;
-  }
-}
+const String DB_NAME = 'todo.db';
+const String TABLE_NAME = 'Task';
+const String COLUMN_ID = 'id';
+const String COLUMN_TITLE = 'title';
+const String COLUMN_DESCRIPTION = 'description';
 
 class TodoProvider {
   Database? db;
+  // Future open(String path) async {
+  //   db = await openDatabase(path, version: 1,
+  //       onCreate: (Database db, int version) async {
+  //     await db.execute('''
+  //       create table $TABLE_NAME (
+  //       $COLUMN_ID integer primary key autoincrement,
+  //       $COLUMN_TITLE varchar(255) not null,
+  //       $COLUMN_DESCRIPTION varchar(255) not null)
+  //     ''');
+  //   });
+  // }
+
   Future open(String path) async {
-    db = await openDatabase(path, version: 1,
+    db = await openDatabase(join(await getDatabasesPath(), path), version: 1,
         onCreate: (Database db, int version) async {
       await db.execute('''
-        create table $tableTodo ( 
-        $columnId integer primary key autoincrement, 
-        $columnTitle varchar(255) not null,
-        $columnDescription text not null)
+        create table $TABLE_NAME ( 
+        $COLUMN_ID integer primary key autoincrement, 
+        $COLUMN_TITLE varchar(255) not null,
+        $COLUMN_DESCRIPTION varchar(255) not null)
       ''');
     });
   }
 
-  Future<Todo> insert(Todo todo) async {
-    todo.id = await db!.insert(tableTodo, todo.toMap());
-    return todo;
+  Future<int> insert(Task task) async {
+    await open(DB_NAME);
+    int i = await db!.insert(TABLE_NAME, task.toBD());
+    await close();
+    return i;
   }
 
-  Future<List<Map>?> getTodos() async {
-    List<Map> todosReturn = [];
-    List<Map> maps = await db!
-        .query(tableTodo, columns: [columnId, columnTitle, columnDescription]);
+  Future<List<Map<String, dynamic>>> getAll() async {
+    await open(DB_NAME);
+    List<Map<String, dynamic>> maps = await db!
+        .query(TABLE_NAME, columns: [COLUMN_TITLE, COLUMN_DESCRIPTION]);
+    await close();
+
     if (maps.isNotEmpty) {
-      maps.map((e) => Todo.fromMap(e));
-      return todosReturn;
+      maps.forEach((contactMap) {
+        print(contactMap);
+      });
+      return maps;
     }
-    return null;
+    return [];
   }
 
   Future close() async => db!.close();

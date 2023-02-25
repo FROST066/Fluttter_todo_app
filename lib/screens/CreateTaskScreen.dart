@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:blog/data/services/db_provider.dart';
 import 'package:blog/screens/home_page.dart';
 import 'package:blog/utils/constants.dart';
 import 'package:blog/widgets/CustomLoader.dart';
@@ -34,6 +35,9 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     try {
       Task? task = await TaskService.create(json.encode(formData));
       customFlutterToast(msg: "Tache créée avec succès");
+      TodoProvider db = TodoProvider();
+      var essai = await db.insert(task!);
+      print("essai $essai");
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (builder) => HomePage(selectedIndex: 1)),

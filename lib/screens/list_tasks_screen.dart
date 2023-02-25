@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:blog/screens/login_screen.dart';
+import 'package:blog/screens/sqlite_list_tasks.dart';
 import 'package:blog/utils/constants.dart';
 import 'package:blog/utils/styles.dart';
 import 'package:dio/dio.dart';
@@ -26,7 +27,7 @@ class ListTasksScreen extends StatefulWidget {
 
 class _ListTasksScreenState extends State<ListTasksScreen> {
   List<Task> tasks = [];
-  bool isLoadingTasks = false, isUpdating = false;
+  bool isLoadingTasks = false, isUpdating = false, showOnNetworkFailed = false;
 
   updateTask(id, formData) async {
     setState(() {
@@ -68,8 +69,10 @@ class _ListTasksScreenState extends State<ListTasksScreen> {
         Fluttertoast.showToast(msg: error['message']);
       } else {
         Fluttertoast.showToast(
-            msg: "Une erreur est survenue veuillez rééssayer");
-        print("pb de connection");
+            msg: "Une erreur est survenue. Verifier votre connexion ");
+        setState(() {
+          showOnNetworkFailed = true;
+        });
       }
     } finally {
       isLoadingTasks = false;
@@ -102,132 +105,153 @@ class _ListTasksScreenState extends State<ListTasksScreen> {
               icon: const Icon(Icons.logout))
         ],
       ),
-      body: isLoadingTasks
-          ? const Center(
-              child: SizedBox(
-                  height: 20, width: 20, child: CircularProgressIndicator()),
+      body: showOnNetworkFailed
+          ? Center(
+              child: ElevatedButton(
+                  style: defaultStyle(context),
+                  onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (builder) => const SQFListTasksScreen())),
+                  child: const Text("Afficher la liste hors ligne")),
             )
-          : tasks.isNotEmpty
-              ? ListView.builder(
-                  itemCount: tasks.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return InkWell(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  DetailTaskScreen(task: tasks[index]))),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: tasks[index].beginedAt == null
-                                ? Colors.blueGrey[100]
-                                : tasks[index].finishedAt == null
-                                    ? Colors.green[100]
-                                    : Colors.grey[400],
-                            borderRadius: BorderRadius.circular(8)),
-                        padding:
-                            const EdgeInsets.only(bottom: 8, right: 8, top: 8),
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        child: Row(
-                          children: [
-                            const Padding(
-                                padding: EdgeInsets.only(left: 8, right: 15),
-                                child: Icon(Icons.list_alt)),
-                            Flexible(
-                                flex: 3,
-                                child: Column(
+          : isLoadingTasks
+              ? const Center(
+                  child: SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator()),
+                )
+              : tasks.isNotEmpty
+                  ? ListView.builder(
+                      itemCount: tasks.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return InkWell(
+                          onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      DetailTaskScreen(task: tasks[index]))),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: tasks[index].beginedAt == null
+                                    ? Colors.blueGrey[100]
+                                    : tasks[index].finishedAt == null
+                                        ? Colors.green[100]
+                                        : Colors.grey[400],
+                                borderRadius: BorderRadius.circular(8)),
+                            padding: const EdgeInsets.only(
+                                bottom: 8, right: 8, top: 8),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
+                            child: Row(
+                              children: [
+                                const Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 8, right: 15),
+                                    child: Icon(Icons.list_alt)),
+                                Expanded(
+                                    child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                          tasks[index].title,
-                                          maxLines: 1,
-                                          style: GoogleFonts.lora(
-                                              color: appBlue,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold),
+                                        Flexible(
+                                          flex: 3,
+                                          child: Text(
+                                            tasks[index].title,
+                                            maxLines: 1,
+                                            style: GoogleFonts.lora(
+                                                color: appBlue,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                         ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            IconButton(
-                                                onPressed: tasks[index]
-                                                            .finishedAt ==
-                                                        null
-                                                    ? () => Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                EditTaskScreen(
-                                                                    task: tasks[
-                                                                        index])))
-                                                    : null,
-                                                icon: Icon(Icons.edit,
-                                                    color: tasks[index]
-                                                                .finishedAt ==
-                                                            null
-                                                        ? appBlue
-                                                        : Colors.grey)),
-                                            Visibility(
-                                                visible:
-                                                    tasks[index].finishedAt ==
-                                                        null,
-                                                child: tasks[index].beginedAt ==
-                                                        null
-                                                    ? ElevatedButton(
-                                                        style: defaultStyle(
-                                                            context),
-                                                        onPressed: () async {
-                                                          if (!isUpdating) {
-                                                            final formData = {
-                                                              "begined_at":
-                                                                  DateTime.now()
-                                                                      .toString()
-                                                                      .substring(
-                                                                          0, 19)
-                                                            };
-                                                            print(
-                                                                "formData--------$formData");
-                                                            await updateTask(
-                                                                tasks[index].id,
-                                                                formData);
-                                                          }
-                                                        },
-                                                        child: const Text(
-                                                            "Commencer"))
-                                                    : ElevatedButton(
-                                                        style: defaultStyle(
-                                                                context)
-                                                            .copyWith(
-                                                                backgroundColor:
-                                                                    MaterialStateProperty
-                                                                        .all(Colors
-                                                                            .red)),
-                                                        onPressed: () async {
-                                                          if (!isUpdating) {
-                                                            final formData = {
-                                                              "finished_at":
-                                                                  DateTime.now()
-                                                                      .toString()
-                                                                      .substring(
-                                                                          0, 19)
-                                                            };
-                                                            print(
-                                                                "formData--------$formData");
-                                                            await updateTask(
-                                                                tasks[index].id,
-                                                                formData);
-                                                          }
-                                                        },
-                                                        child: const Text(
-                                                            "Arrêter"),
-                                                      ))
-                                          ],
+                                        Flexible(
+                                          flex: 6,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              IconButton(
+                                                  onPressed: tasks[index]
+                                                              .finishedAt ==
+                                                          null
+                                                      ? () => Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  EditTaskScreen(
+                                                                      task: tasks[
+                                                                          index])))
+                                                      : null,
+                                                  icon: Icon(Icons.edit,
+                                                      color: tasks[index]
+                                                                  .finishedAt ==
+                                                              null
+                                                          ? appBlue
+                                                          : Colors.grey)),
+                                              Visibility(
+                                                  visible:
+                                                      tasks[index].finishedAt ==
+                                                          null,
+                                                  child: tasks[index]
+                                                              .beginedAt ==
+                                                          null
+                                                      ? ElevatedButton(
+                                                          style: defaultStyle(
+                                                              context),
+                                                          onPressed: () async {
+                                                            if (!isUpdating) {
+                                                              final formData = {
+                                                                "begined_at": DateTime
+                                                                        .now()
+                                                                    .toString()
+                                                                    .substring(
+                                                                        0, 19)
+                                                              };
+                                                              print(
+                                                                  "formData--------$formData");
+                                                              await updateTask(
+                                                                  tasks[index]
+                                                                      .id,
+                                                                  formData);
+                                                            }
+                                                          },
+                                                          child: const Text(
+                                                              "Commencer"))
+                                                      : ElevatedButton(
+                                                          style: defaultStyle(
+                                                                  context)
+                                                              .copyWith(
+                                                                  backgroundColor:
+                                                                      MaterialStateProperty.all(
+                                                                          Colors
+                                                                              .red)),
+                                                          onPressed: () async {
+                                                            if (!isUpdating) {
+                                                              final formData = {
+                                                                "finished_at": DateTime
+                                                                        .now()
+                                                                    .toString()
+                                                                    .substring(
+                                                                        0, 19)
+                                                              };
+                                                              print(
+                                                                  "formData--------$formData");
+                                                              await updateTask(
+                                                                  tasks[index]
+                                                                      .id,
+                                                                  formData);
+                                                            }
+                                                          },
+                                                          child: const Text(
+                                                              "Arrêter"),
+                                                        ))
+                                            ],
+                                          ),
                                         )
                                       ],
                                     ),
@@ -236,19 +260,19 @@ class _ListTasksScreenState extends State<ListTasksScreen> {
                                         : tasks[index].description)
                                   ],
                                 )),
-                          ],
-                        ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    )
+                  : const Center(
+                      child: Text(
+                        "Aucunes taches",
+                        style: TextStyle(
+                            fontSize: 20.0, fontStyle: FontStyle.italic),
                       ),
-                    );
-                  },
-                )
-              : const Center(
-                  child: Text(
-                    "Aucunes taches",
-                    style:
-                        TextStyle(fontSize: 20.0, fontStyle: FontStyle.italic),
-                  ),
-                ),
+                    ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.push(context,
             MaterialPageRoute(builder: (context) => CreateTaskScreen())),

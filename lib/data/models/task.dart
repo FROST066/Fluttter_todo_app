@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import '../services/db_provider.dart';
+
 Task taskFromJson(String str) => Task.fromJson(json.decode(str));
 
 String taskToJson(Task data) => json.encode(data.toJson());
@@ -54,6 +56,11 @@ class Task {
         "user_id": userId,
         "created_at": createdAt,
         "updated_at": updatedAt,
+      };
+
+  Map<String, Object?> toBD() => {
+        COLUMN_TITLE: title,
+        COLUMN_DESCRIPTION: description,
       };
 
   @override

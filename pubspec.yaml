@@ -20,11 +20,13 @@ dependencies:
   fluttertoast: ^8.1.2
   date_time_picker: ^2.1.0
   google_fonts: ^4.0.3
-  sqflite: ^2.2.4+1
+  # sqflite: ^2.2.4+1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  sqflite:
+  path:
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
