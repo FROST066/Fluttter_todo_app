@@ -1,5 +1,12 @@
 import 'package:blog/utils/constants.dart';
+import 'package:blog/widgets/CustomLoader.dart';
+import 'package:blog/widgets/customFlutterToast.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+import '../data/models/task.dart';
+import '../data/services/TaskService.dart';
 
 // const Map<String, Color> colorsMap = {
 //   "Toutes les tâches": Colors.green,
@@ -17,50 +24,117 @@ const Map<String, Color> colorsMap = {
   "Tâches finies avec retard": appBlue
 };
 
-class CustomChart extends StatelessWidget {
-  CustomChart({super.key, required this.dataMap});
-  final Map<String, int> dataMap;
+class CustomChart extends StatefulWidget {
+  const CustomChart({super.key});
+  @override
+  State<CustomChart> createState() => _CustomChartState();
+}
+
+class _CustomChartState extends State<CustomChart> {
+  bool isLoadingTasks = false;
+  List<Task> tasks = [];
+  Map<String, int> dataMap = {};
+
+  Map<String, int> dataMapDead = {
+    "Toutes les tâches": 200,
+    "Tâches non commencées": 70,
+    "Tâches en cours": 30,
+    "Tâches finies": 70,
+    "Tâches finies avec retard": 30
+  };
+
+  loadTasks() async {
+    setState(() {
+      isLoadingTasks = true;
+    });
+    try {
+      tasks = await TaskService.fetch();
+      print("All task got--------------$tasks");
+      loadDataMap();
+      print("DataMap initialised-------------$dataMap");
+    } on DioError catch (e) {
+      print(e);
+      Map<String, dynamic>? error = e.response?.data;
+      if (error != null && error.containsKey('message')) {
+        Fluttertoast.showToast(msg: error['message']);
+      } else {
+        customFlutterToast(
+            msg: "Une erreur est survenue. Verifier votre connexion ");
+      }
+    } finally {
+      isLoadingTasks = false;
+      setState(() {});
+    }
+  }
+
+  loadDataMap() {
+    dataMap["Toutes les tâches"] = tasks.length;
+    dataMap["Tâches non commencées"] =
+        tasks.where((element) => element.beginedAt == null).length;
+    dataMap["Tâches en cours"] = tasks
+        .where((element) =>
+            element.beginedAt != null && element.finishedAt == null)
+        .length;
+    dataMap["Tâches finies"] =
+        tasks.where((element) => element.finishedAt != null).length;
+    dataMap["Tâches finies avec retard"] = tasks
+        .where((element) =>
+            element.finishedAt != null &&
+            DateTime.parse(element.finishedAt!)
+                .isAfter(DateTime.parse(element.deadlineAt)))
+        .length;
+  }
+
+  @override
+  void initState() {
+    loadTasks();
+    super.initState();
+  }
+
   double totalWidth = 0;
   @override
   Widget build(BuildContext context) {
     totalWidth = MediaQuery.of(context).size.width * .8;
     return Scaffold(
       appBar: AppBar(title: const Text("Statistiques")),
-      body: Center(
-        child: SizedBox(
-          width: MediaQuery.of(context).size.width * .9,
-          height: MediaQuery.of(context).size.height * .6,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: dataMap.entries
-                .toList()
-                .map((e) => Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(e.key,
-                            style: const TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 10),
-                        Row(
-                          children: [
-                            CustomAnimatedContainer(
-                                width: totalWidth *
-                                    e.value.toDouble() /
-                                    dataMap["Toutes les tâches"]!,
-                                color: colorsMap[e.key]!),
-                            Text(
-                              e.value.toString(),
-                              style: TextStyle(color: colorsMap[e.key]!),
-                            )
-                          ],
-                        ),
-                      ],
-                    ))
-                .toList(),
-          ),
-        ),
-      ),
+      body: isLoadingTasks
+          ? customLoader()
+          : Center(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * .9,
+                height: MediaQuery.of(context).size.height * .6,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: dataMap.entries
+                      .toList()
+                      .map((e) => Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(e.key,
+                                  style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600)),
+                              const SizedBox(height: 10),
+                              Row(
+                                children: [
+                                  CustomAnimatedContainer(
+                                      width: totalWidth *
+                                          e.value.toDouble() /
+                                          dataMap["Toutes les tâches"]!,
+                                      color: colorsMap[e.key]!),
+                                  Text(
+                                    e.value.toString(),
+                                    style: TextStyle(color: colorsMap[e.key]!),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ))
+                      .toList(),
+                ),
+              ),
+            ),
     );
   }
 }

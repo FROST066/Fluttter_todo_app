@@ -20,6 +20,7 @@ dependencies:
   fluttertoast: ^8.1.2
   date_time_picker: ^2.1.0
   google_fonts: ^4.0.3
+  google_nav_bar: ^5.0.6
   # sqflite: ^2.2.4+1
 
 dev_dependencies:

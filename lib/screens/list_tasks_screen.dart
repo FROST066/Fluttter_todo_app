@@ -4,6 +4,7 @@ import 'package:blog/screens/login_screen.dart';
 import 'package:blog/screens/sqlite_list_tasks.dart';
 import 'package:blog/utils/constants.dart';
 import 'package:blog/utils/styles.dart';
+import 'package:blog/widgets/CustomLoader.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -116,12 +117,7 @@ class _ListTasksScreenState extends State<ListTasksScreen> {
                   child: const Text("Afficher la liste hors ligne")),
             )
           : isLoadingTasks
-              ? const Center(
-                  child: SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator()),
-                )
+              ? customLoader()
               : tasks.isNotEmpty
                   ? ListView.builder(
                       itemCount: tasks.length,
